@@ -1,3 +1,4 @@
+Lvl 1 :-
 Because the '-' character is reserved for bash to make the executable read "Standard input",In 
 order to read a file called '-' u must specify it inside an absolute or cd to its parent directory and use relative path
 ```bash
@@ -8,6 +9,7 @@ OR
 cd /home/bandit1/ && cat ./-
 ```
 -------------------------------
+Lvl 2 :-
 Spaces inside a file name is very annoying, To make the shell interpret its name correctly, put it inside quotation marks
 ```bash
 cat "spaces in this filename"
@@ -17,6 +19,7 @@ U can also use a backslash to escape the spaces in the file name
 cat spaces\ in\ this\ filename 
 ```
 ----------------------------------
+Lvl 3 :-
 In linux, a hidden file starts with a dot '.', to show a hidden file use "ls -a"
 ```bash
 bandit3@bandit:~/inhere$ ls -a
@@ -27,6 +30,7 @@ here the file is called ...Hiding-from-you
  cat ...Hiding-From-You
 ```
 --------------------------------
+Lvl 4 :-
 here we have several files to test, we have to loop over them using the find command
 ```bash
 find . -type f -exec file {} +
@@ -46,12 +50,14 @@ we got it! The file07 is the one, simply cat it,but since the naming is not norm
 cd inhere && cat ./-file07
 ```
 ----------------------------
+Lvl 5 :-
 here we have to search all over a directory contains lots of sub-directories and file , It's a matter of some filters in find command
 ```bash
 bandit5@bandit:~/inhere$ find . -size 1033c -not -executable
 ./maybehere07/.file2
 ```
 ----------------------------
+Lvl 6 :-
 Again, it's a matter of some filters in find command but also we will face a minor problem, since we search all over the filesystem we will encounter some garbage results/errors such as searching in /proc directory 
 ```bash
 bandit6@bandit:~$ find / -user bandit7 -group bandit6
@@ -82,6 +88,7 @@ bandit6@bandit:~$ find / -user bandit7 -group bandit6 2>/dev/null
 /var/lib/dpkg/info/bandit7.password
 ```
 -----------------------------------------------------------------
+Lvl 7 :-
 here we just use grep command to search for occurrence of "millionth word"
 ```bash
 bandit7@bandit:~$ cat data.txt | grep millionth
@@ -122,7 +129,7 @@ bandit10@bandit:~$ base64 -d data.txt
 The password is dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
 ```
 Lvl 11 :-
-FOr this challenge, we need some command to just translate characters in order and according to a specific rule, tr command (which stands for translate) got us covered, according to Wikipedia, ROT13 flips A to M with N to Z and vice versa, A 13 opposite to 13, we need to reverse this translation
+For this challenge, we need some command to just translate characters in order and according to a specific rule, tr command (which stands for translate) got us covered, according to Wikipedia, ROT13 flips A to M with N to Z and vice versa, A 13 opposite to 13, we need to reverse this translation
 ```bash
 bandit11@bandit:~$ cat data.txt | tr "a-mn-zA-MN-Z" "n-za-mN-ZA-M"
 The password is 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
