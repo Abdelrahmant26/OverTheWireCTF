@@ -172,7 +172,7 @@ data5.bin  data6.bin  data.txt  out.out
 bandit12@bandit:/tmp/midgeek$ file data6.bin 
 data6.bin: bzip2 compressed data, block size = 900k
 bandit12@bandit:/tmp/midgeek$ bzip2 -d data6.bin
-bzip2: Can't guess original name for data6.bin -- using data6.bin.out
+bzip2: Can\'t guess original name for data6.bin -- using data6.bin.out
 bandit12@bandit:/tmp/midgeek$ file data6.bin.out 
 data6.bin.out: POSIX tar archive (GNU)
 bandit12@bandit:/tmp/midgeek$ tar -xf data6.bin.out
