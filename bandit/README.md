@@ -193,4 +193,23 @@ The password is FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn //finally!
 ```
 --------------------------
 Lvl 13 :-
+This challenge is quite simple , just use the ssh key in the directory to log in as the next challenge user
+```bash
+bandit13@bandit:~$ ssh bandit14@localhost -p 2220 -i sshkey.private //and go through ssh stuff
+```
+So much easy to get the password 
+```bash
+bandit14@bandit:~$ cat /etc/bandit_pass/bandit14
+MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS
+```
+----------------------------------------
+Lvl 14 :-
+In this challenge, we need to establish a raw tcp connection to port 30000, we will use netcat
+```bash
+bandit14@bandit:~$ nc localhost 30000
+MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS //I entered this , It wawaiting for my input
+Correct!
+8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+```
+Lvl 15 :-
 
