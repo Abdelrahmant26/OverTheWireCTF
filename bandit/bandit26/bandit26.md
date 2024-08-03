@@ -33,3 +33,19 @@ typing the following line :
 ```
 Success!!
 ![alt](pass.png)
+After this we can open a shell to be able to view th password for next level, vim can deploy a shell by entering command 
+```bash
+:shell
+```
+but all what it do is executing the same script agai, so we have to set the shell to bash by enetring the following command first:
+```bash
+:set shell=/bin/bash
+```
+after this we can use the bash shell using the command :
+```bash
+:shell
+```
+![alt](done.png)
+![alt](sh.png)
+Fnally, we can use the setuid binary to view password for bandit26
+!(pass.png)
