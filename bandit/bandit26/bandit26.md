@@ -48,4 +48,4 @@ after this we can use the bash shell using the command :
 ![alt](done.png)
 ![alt](sh.png)
 Fnally, we can use the setuid binary to view password for bandit26
-!(pass.png)
+![alt](pass.png)
